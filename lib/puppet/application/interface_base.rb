@@ -50,7 +50,7 @@ class Puppet::Application::InterfaceBase < Puppet::Application
 
     @type = self.class.name.to_s.sub(/.+:/, '').downcase.to_sym
 
-    @interface = Puppet::Interface.interface(@type).new
+    @interface = Puppet::Interface.interface(@type).new(@options)
     @format ||= @interface.class.default_format || :pson
 
     validate
