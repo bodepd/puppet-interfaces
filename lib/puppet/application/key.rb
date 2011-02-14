@@ -1,4 +1,4 @@
-require 'puppet/application/data_baseclass'
+require 'puppet/application/interface_indirector_base'
 
-class Puppet::Application::Key < Puppet::Application::DataBaseclass
+class Puppet::Application::Key < Puppet::Application::InterfaceIndirectorBase
 end
