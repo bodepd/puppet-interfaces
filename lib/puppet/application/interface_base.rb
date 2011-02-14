@@ -35,6 +35,7 @@ class Puppet::Application::InterfaceBase < Puppet::Application
   attr_accessor :interface, :type, :verb, :name, :arguments, :format
 
   def main
+    @exit_code=0 
     # Call the method associated with the provided action (e.g., 'find').
     result = interface.send(verb, name, *arguments)
     if self.respond_to?(:render)
@@ -43,6 +44,7 @@ class Puppet::Application::InterfaceBase < Puppet::Application
       render_method = Puppet::Network::FormatHandler.format(format).render_method
       puts result.send(render_method) if result
     end
+    exit(@exit_code)
   end
 
   def setup
