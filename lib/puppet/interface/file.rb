@@ -1,6 +1,6 @@
 require 'puppet/interface/indirector'
 
-class Puppet::Interface::File < Puppet::Interface::Indirector
+Puppet::Interface::Indirector.new(:file) do
   def self.indirection_name
     :file_bucket_file
   end
