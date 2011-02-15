@@ -3,14 +3,14 @@ require 'puppet/application/interface_base'
 require 'puppet/interface'
 
 # base application for all interfaces that are also terminuses
-class Puppet::Application::InterfaceIndirectorBase < Puppet::Application::InterfaceBase
+class Puppet::Application::IndirectionBase < Puppet::Application::InterfaceBase
 
   option("--from TERMINUS", "-f") do |arg|
     @from = arg
   end
 
   # XXX this doesn't work, I think
-  # NOTE - this probably beongs in InterfaceIndirectorBase (and needs to list
+  # NOTE - this probably beongs in IndirectionBase (and needs to list
   # actions instead of termini)
   option("--list") do
     indirections.each do |ind|
