@@ -47,8 +47,17 @@ class Puppet::String
 
       return string
     end
-
-    alias :[] :define
+   def [](name, version)
+     #require 'ruby-debug';debugger
+     unless string = Puppet::String::StringCollection[name, version] 
+       unless Puppet::String::StringCollection[name, :current]
+         raise(Puppet::Error, "Could not find Puppet::String: #{name}")
+       else
+         raise(Puppet::Error, "Could not find version #{version} for Puppet::String: #{name}")
+       end
+     end
+     string
+   end
   end
 
   attr_accessor :default_format

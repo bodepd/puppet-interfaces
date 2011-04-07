@@ -1,4 +1,6 @@
 #!/usr/bin/env ruby
+require 'tmpdir'
+require 'fileutils'
 
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper.rb')
 
@@ -30,6 +32,31 @@ describe Puppet::String do
       proc { Puppet::String.define(:no_version) }.should raise_error(ArgumentError)
     end
   end
+
+  describe '#[]' do
+    before :all do
+      @dir = Dir.mktmpdir
+      $LOAD_PATH.push(@dir)
+      FileUtils.mkdir_p(File.join @dir, 'puppet', 'string')
+      File.open(File.join(@dir, 'puppet', 'string', 'foo.rb'), 'w') do |f|
+        f.puts "Puppet::String.define(:foo, '0.0.2') do end"
+      end
+      File.open(File.join(@dir, 'puppet', 'string', 'blah.rb'), 'w') do |f|
+        f.puts "Puppet::String.define(:blah, '0.0.2') do end"
+      end
+    end
+    it 'should inform you if there is no string of a given name' do
+      proc { Puppet::String[:unknown, '0.0.1'] }.should raise_error(Puppet::Error, 'Could not find Puppet::String: unknown')
+    end
+    it "should fail if it tries to load an unknown string version" do
+      proc { Puppet::String[:blah, '0.0.1'] }.should raise_error(Puppet::Error, 'Could not find version 0.0.1 for Puppet::String: blah')
+    end
+    it 'should be able to find current Puppet::String' do
+      Puppet::String[:foo, '0.0.2'].version.should == '0.0.2'
+      Puppet::String[:foo, '0.0.2'].name.should == :foo
+    end
+  end
+
 
   describe "#initialize" do
     it "should require a version number" do
@@ -74,10 +101,6 @@ describe Puppet::String do
     Puppet::String.autoloader.should be_instance_of(Puppet::Util::Autoload)
   end
 
-  it "should try to require strings that are not known" do
-    Puppet::String::StringCollection.expects(:require).with "puppet/string/foo"
-    Puppet::String[:foo, '0.0.1']
-  end
 
   it "should be able to load all actions in all search paths"
 
