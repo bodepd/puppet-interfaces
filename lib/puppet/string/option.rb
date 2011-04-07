@@ -1,3 +1,4 @@
+require 'puppet/string'
 class Puppet::String::Option
   attr_reader   :parent
   attr_reader   :name
